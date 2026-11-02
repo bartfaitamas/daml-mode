@@ -1,0 +1,83 @@
+module Sample where
+
+import Daml.Script
+
+template Asset
+  with
+    issuer : Party
+    owner : Party
+  where
+    signatory issuer
+    observer owner
+
+    choice Give : ContractId Asset
+      with
+        newOwner : Party
+      controller owner
+      do create this with
+           owner = newOwner
+
+    choice Renew : ContractId Asset
+      controller issuer
+      do
+        create this
+          with
+            owner = issuer
+
+    interface instance Transferable for Asset where
+      view =
+        let
+          meta = Meta with
+            values = []
+        in
+          TransferableView
+            with
+              holder = owner
+              meta
+
+-- | Declaration headers ending in `with': fields at +4, `where' at +2.
+template Install with
+    provider : Party
+    user : Party
+  where
+    signatory provider
+
+    choice Reject : ()
+      with
+        reason : Text
+      controller provider
+        do
+          pure ()
+
+data Result = Result with
+    installId : ContractId Install
+
+setup : Script ()
+setup = script do
+  alice <- allocateParty "Alice"
+  assetCid <- submit alice $
+    createCmd Asset with
+      issuer = alice
+      owner = alice
+  submit alice $
+    exerciseCmd assetCid Give with
+      newOwner = alice
+  forA_ [alice] (\p -> do
+    debug p
+    pure ())
+  runSetup
+    "a description"
+    alice
+  pure ()
+
+runSetup
+  : Text
+  -> Party
+  -> Script ()
+runSetup description
+  party = script do
+  let names = do
+        p <- [party]
+        pure (show p)
+  debug description
+  pure ()

@@ -1,4 +1,26 @@
 * daml-mode
   Emacs mode for editing [[https://daml.com][daml]] projects, based on [[https://github.com/haskell/haskell-mode][haskell-mode]].
 
-  With [[https://github.com/bartfailt/daml-lsp.git][daml-lsp]] it supports [[https://emacs-lsp.github.io/lsp-mode/][lsp-mode]] as well.
+  This repository provides two packages:
+
+  - =daml-mode= :: the major mode, for Emacs 27.1 or newer.  It also
+    registers the Daml language server with [[https://github.com/joaotavora/eglot][eglot]], so =M-x eglot=
+    works in Daml buffers.  eglot comes with Emacs 29.1 and newer; on
+    older versions, install it from GNU ELPA.
+  - =daml-lsp= :: the client for [[https://emacs-lsp.github.io/lsp-mode/][lsp-mode]], for Emacs 29.1 or newer, as
+    lsp-mode needs.  It depends on =daml-mode= and lsp-mode, and adds
+    the Daml Script results view.
+
+** Language server
+   The server command is =dpm damlc multi-ide=, with dpm (the Daml
+   package manager) found on =exec-path=.  Older SDKs, which come
+   with the Daml assistant instead of dpm, are not supported.  Set
+   =daml-server-command= to use something else, and
+   =daml-lsp-extra-arguments= to pass extra arguments with lsp-mode.
+
+   =multi-ide= handles projects with several Daml packages listed in
+   =multi-package.yaml=; start the server from the project root.
+
+** Development
+   =make test= runs the tests, =make all= also byte-compiles and runs
+   package-lint.  Dependencies are installed into =.deps/=.
