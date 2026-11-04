@@ -6,7 +6,7 @@
 ;; Author: Bártfai Tamás <tamas@bartfai.dev>
 ;; Assisted-by: Claude:claude-opus-5-5
 
-;; Package-Requires: ((emacs "29.1") (daml-mode "2.0") (dash "2.18.0") (lsp-mode "7.0"))
+;; Package-Requires: ((emacs "29.1") (dash "2.18.0") (lsp-mode "7.0"))
 ;; URL: https://github.com/bartfaitamas/daml-mode
 ;; Package-Version: 2.0
 
